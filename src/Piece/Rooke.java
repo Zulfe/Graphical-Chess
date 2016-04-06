@@ -42,8 +42,8 @@ public class Rooke extends Piece {
 				//and, if a piece is in the destination square
 				if(chessBoard[newPosition.getY()][newPosition.getX()] != null){
 					//and it is not the same color as the piece moving
-					if(chessBoard[super.currentPos.getY()][super.currentPos.getX()] != 
-					   chessBoard[newPosition.getY()][newPosition.getX()]){
+					if(chessBoard[super.currentPos.getY()][super.currentPos.getX()].isWhite != 
+					   chessBoard[newPosition.getY()][newPosition.getX()].isWhite){
 						return true;
 					}
 				}
