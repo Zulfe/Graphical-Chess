@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,7 +44,6 @@ public class SinglePlayerView extends JFrame implements View {
 	}
 	
 	public void initComponents(){
-		frame = new JFrame();
 		gamePanel = new JPanel();
 		gameBoard = new BoardTable(){
 			public boolean isCellEditable(int row, int column){
@@ -107,10 +107,9 @@ public class SinglePlayerView extends JFrame implements View {
 		gamePanel.add(gameBoard);
 		gamePanel.add(textBox);
 		//gamePanel.add(multiplayer);
-		frame.add(gamePanel);
+		add(gamePanel);
 		
-		frame.setMinimumSize(new Dimension(SQUARE_CELL*9, SQUARE_CELL*9));
-		frame.setVisible(true);
+		setMinimumSize(new Dimension(SQUARE_CELL*9, SQUARE_CELL*9));
 	}
 	
 	@Override
@@ -146,12 +145,19 @@ public class SinglePlayerView extends JFrame implements View {
 				System.out.println("Selected piece position: " + gameBoard.getSelectedRow() + ", " + gameBoard.getSelectedColumn());
 				movePiece = new Coordinate(gameBoard.getSelectedColumn(), gameBoard.getSelectedRow());
 				textBox.setText("Player has selected " + singlePlayerPresenter.getModel().getBoard().getPieceByPos(movePiece).ID + " at (" + movePiece.getGameX() + ", " + movePiece.getGameY() + ")");
+				ArrayList<Coordinate> possibleMoves = singlePlayerPresenter.getModel().getBoard().getPieceByPos(movePiece).getPossibleMoves(singlePlayerPresenter.getModel().getPieceArray());
+				customRender.setPossibleMoves(possibleMoves);
+				gameBoard.updateUI();
 			}
 		} else{
 			System.out.println("Selected move position: " + gameBoard.getSelectedRow() + ", " + gameBoard.getSelectedColumn());
 			movePosition = new Coordinate(gameBoard.getSelectedColumn(), gameBoard.getSelectedRow());
-			textBox.setText("Player has moved " + getPresenter().getModel().getBoard().getPieceByPos(movePiece).ID + " from (" + movePiece.getGameX() + ", " + movePiece.getGameY() + ") to (" + movePosition.getGameX() + ", " + movePosition.getGameY() + ")");
+			if(getPresenter().getModel().getBoard().getPieceByPos(movePiece).isMoveValid(movePosition, getPresenter().getModel().getPieceArray()))
+				textBox.setText("Player has moved " + getPresenter().getModel().getBoard().getPieceByPos(movePiece).ID + " from (" + movePiece.getGameX() + ", " + movePiece.getGameY() + ") to (" + movePosition.getGameX() + ", " + movePosition.getGameY() + ")");
+			else
+				textBox.setText("Invalid move request for " + getPresenter().getModel().getBoard().getPieceByPos(movePiece).ID);
 			updateModelFromView();
+			customRender.setPossibleMoves(new ArrayList<Coordinate>());
 			movePiece = null;
 			movePosition = null;
 		}
