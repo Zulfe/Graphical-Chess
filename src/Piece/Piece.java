@@ -1,5 +1,7 @@
 package Piece;
 
+import java.util.ArrayList;
+
 import Board.Coordinate;
 
 public class Piece {
@@ -48,6 +50,22 @@ public class Piece {
 	 */
 	public String getIcon(){
 		return icon;
+	}
+	
+	/**
+	 * Returns an ArrayList of Coordinate objects for every position on the board that the piece
+	 * can move to.
+	 * @return the ArrayList of Coordinate positions
+	 */
+	public ArrayList<Coordinate> getPossibleMoves(Piece[][] chessBoard){
+		ArrayList<Coordinate> possibleMoves = new ArrayList<Coordinate>();
+		for(int x = 0; x < 8; x++)
+			for(int y = 0; y < 8; y++)
+				if(isMoveValid(new Coordinate(x, y), chessBoard)){
+					System.out.println("Adding " + (new Coordinate(x, y)).toString());
+					possibleMoves.add(new Coordinate(x, y));
+				}
+		return possibleMoves;
 	}
 	
 	/**
